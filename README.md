@@ -171,17 +171,17 @@ Saída que queremos:
     Base de Dados: LOCAL SQL [OK]
 ## 9 - Como saber se funcionou?
 
-1)Crie um grupo de nome qualquer:
+1) Crie um grupo de nome qualquer:
 Cadastro > Grupos
 
-2)Crie uma política com seus critérios.
+2) Crie uma política com seus critérios.
 Avançado > Políticas de impressão
 
-3)Dentro da política, atribua a ela um grupo.
+3) Dentro da política, atribua a ela um grupo.
 
-4)Adicione o(s) nome(s) da impressora(s) dentro da política.
+4) Adicione o(s) nome(s) da impressora(s) dentro da política.
 
-5)Por fim, cadastre um usuário, e atribua à ele um dos grupos.
+5) Por fim, cadastre um usuário, e atribua à ele um dos grupos.
 Faça o teste da impressão. Caso na aba "Relatórios>Impressões" vier com status "OK - Impresso com sucesso", está tudo certo.
 
 Se não, veja no log de erro dentro do IBQUOTA. 
