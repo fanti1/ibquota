@@ -13,8 +13,10 @@
     wget http://www.pykota.com/software/pkpgcounter/download/tarballs/pkpgcounter-3.50.tar.gz
     tar -zxf pkpgcounter-3.50.tar.gz
     cd pkpgcounter-3.50
+    
 nano setup.py -> REMOVA O TRY CATCH DE IMPORT DO PSYCO.
-    ``python setup.py install``
+
+    python setup.py install
 
 
 ## 2 - Download do template do IBQUOTA 3
@@ -58,24 +60,30 @@ Para dar permissão de acesso via rotas ao CUPS, altere as linhas conforme abaix
 Criar o DB:
 
      sudo mysql -u root -p
+     
    confirmar senha: *****
-     ```mysql> CREATE DATABASE ibquota3;
-     mysql> exit```
+   
+     mysql> CREATE DATABASE ibquota3;
+     mysql> exit
 
 Importar a estrutura de tabelas através do script 'ibquota3.sql'
     
      cd /home/nome_usuario/ibquota3/sql
      sudo mysql -u root ibquota3 < ibquota3.sql -p
+     
    confirmar senha: *****
+   
      
 
 Criar o usuário padrão do ibquota no banco:
 
     sudo mysql -u root -p
+    
   confirmar senha: *****
-    ```mysql> GRANT ALL ON ibquota3.* TO ibquota@localhost identified by 'ibquota';
+  
+    mysql> GRANT ALL ON ibquota3.* TO ibquota@localhost identified by 'ibquota';
     mysql> FLUSH PRIVILEGES;
-    mysql> exit```
+    mysql> exit
  
 O script principal (ibquota3) deverá ser copiado para dentro da basta backend, do CUPS.
 
@@ -85,7 +93,9 @@ O script principal (ibquota3) deverá ser copiado para dentro da basta backend, 
      sudo chmod 755 ibquota3
      sudo chown root ibquota3
 
+
 Agora temos que editar o backend:
+
 
     sudo nano /usr/lib/cups/ibquota3
 
@@ -95,10 +105,12 @@ Agora temos que editar o backend:
     my $DBdatabase="ibquota3";
     my $DBport=3306;
  
-     cd home/nome_usuario/ibquota-master/gg
-     sudo mkdir /var/www/html/gg
-     sudo cp -r * /var/www/html/gg
+    cd home/nome_usuario/ibquota-master/gg
+    sudo mkdir /var/www/html/gg
+    sudo cp -r * /var/www/html/gg
+    
 Lembrar de deletar o arquivo index.html do apache
+
 
 Neste momento iremos editar o arquivo com as configurações de acesso a banco
 
@@ -129,11 +141,14 @@ Em "Administration", selecione:
     "Allow users to cancel any job (not just their own)" 
 
 Em "Administration", clique em "Add Printer"
-    No meu caso em particular, eu adicionei da seguinte forma:
-    Opção 'Other Network Printers:' -> Internet Printing Protocol (http)
-    Deletar qualquer texto do campo e utilizar: 
-    ```ibquota3:socket://0.0.0.0```
-    onde 0.0.0.0 = ip da impressora.
+
+   No meu caso em particular, eu adicionei da seguinte forma:
+   Opção 'Other Network Printers:' -> Internet Printing Protocol (http)
+   Deletar qualquer texto do campo e utilizar: 
+    
+    ibquota3:socket://0.0.0.0
+    
+   onde 0.0.0.0 = ip da impressora.
 
 ## 7 - Configuração via site do IBQUOTA 3:
 
@@ -147,17 +162,19 @@ Em "Administration", clique em "Add Printer"
 ## 8 - Teste a configuração do Backend:
 
     perl /usr/lib/cups/backend/ibquota3 --check
+    
 Saída que queremos:
 
-PATH_PYTHON = /usr/bin/python [OK]
-Python is executable [OK]
-PATH_PKPGCOUNTER = /usr/bin/pkpgcounter [OK]
-Base de Dados: LOCAL SQL [OK]
+    PATH_PYTHON = /usr/bin/python [OK]
+    Python is executable [OK]
+    PATH_PKPGCOUNTER = /usr/bin/pkpgcounter [OK]
+    Base de Dados: LOCAL SQL [OK]
 
 # Observações finais:
 1) A criação de usuários administradores no template web do ibquota3 precisa ser corrigida, tem alguma coisa de errado ao setar as permissões.
 2) Pode acontecer do 'setup.py' do pkpgcounter, jogar o arquivo 'pkpgcounter' para a pasta '/usr/local/bin/', se for este o caso, copie o arquivo para a pasta correta
-    ```sudo cp /usr/local/bin/pkpgcounter /usr/bin/pkpgcounter```
+
+        sudo cp /usr/local/bin/pkpgcounter /usr/bin/pkpgcounter
     
 
 Obrigado pelo interesse no IBQUOTA!
