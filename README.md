@@ -1,6 +1,4 @@
-# IBQUOTA 3 - CUPS BACKEND
-
-OBS Inicial: Fazer a instalação utilizando o Ubuntu versão 16.04 LTS. 
+# IBQUOTA 3 - CUPS BACKEND (Testado com Ubuntu 16.04.7 LTS)
 
 Instalação
 
@@ -8,7 +6,11 @@ Instalação
 
     sudo apt-get install apache2 build-essential cups mysql-server php libdbd-mysql-perl libnet-ldap-perl php-ldap python-minimal
 
+    ``` 
+    apt upgrade
+    apt update
 
+    ```
 1.1 - Instalação manual do contador de páginas pkpgcounter:
 
     cd /home/nome_do_usuario
@@ -130,10 +132,12 @@ Em "Administration", selecione:
     "Allow remote administration"
     "Allow users to cancel any job (not just their own)" 
 
-Em "Administration", clique em "Add Printer" Faça a instalação da impressora prestando atenção em "connection".
-    OBS: No meu caso em particular, eu adicionei da seguinte forma:
+Em "Administration", clique em "Add Printer"
+    No meu caso em particular, eu adicionei da seguinte forma:
     Opção 'Other Network Printers:' -> Internet Printing Protocol (http)
-    Deletar qualquer texto do campo e utilizar: ibquota3:socket://0.0.0.0 onde 0.0.0.0 = ip da impressora.
+    Deletar qualquer texto do campo e utilizar: 
+    ```ibquota3:socket://0.0.0.0``` 
+    onde 0.0.0.0 = ip da impressora.
 
 7 - Configuração via GG:
 
@@ -147,13 +151,12 @@ Em "Administration", clique em "Add Printer" Faça a instalação da impressora 
 8 - Teste a configuração do Backend:
 
     perl /usr/lib/cups/backend/ibquota3 --check
-    
     PATH_PYTHON = /usr/bin/python [OK]
     Python is executable [OK]
     PATH_PKPGCOUNTER = /usr/bin/pkpgcounter [OK]
     Base de Dados: LOCAL SQL [OK]
-    ...
-Item 8 - OBS: Pode acontecer do setup.py jogar o pkpgcounter para a pasta '/usr/local/bin/', neste caso você pode usar um:
+    
+### Pode acontecer do setup.py jogar o pkpgcounter para a pasta '/usr/local/bin/', se for este o caso, copie para o apontamento correto:
     sudo cp /usr/local/bin/pkpgcounter /usr/bin/pkpgcounter
     
 
