@@ -169,7 +169,23 @@ Saída que queremos:
     Python is executable [OK]
     PATH_PKPGCOUNTER = /usr/bin/pkpgcounter [OK]
     Base de Dados: LOCAL SQL [OK]
+## 9 - Como saber se funcionou?
 
+1)Crie um grupo de nome qualquer:
+Cadastro > Grupos
+
+2)Crie uma política com seus critérios.
+Avançado > Políticas de impressão
+
+3)Dentro da política, atribua a ela um grupo.
+
+4)Adicione o(s) nome(s) da impressora(s) dentro da política.
+
+5)Por fim, cadastre um usuário, e atribua à ele um dos grupos.
+Faça o teste da impressão. Caso na aba "Relatórios>Impressões" vier com status "OK - Impresso com sucesso", está tudo certo.
+
+Se não, veja no log de erro dentro do IBQUOTA. 
+Relatórios>Impressões com erro
 # Observações finais:
 1) A criação de usuários administradores no template web do ibquota3 precisa ser corrigida, tem alguma coisa de errado ao setar as permissões.
 2) Pode acontecer do 'setup.py' do pkpgcounter, jogar o arquivo 'pkpgcounter' para a pasta '/usr/local/bin/', se for este o caso, copie o arquivo para a pasta correta
