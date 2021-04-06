@@ -1,36 +1,33 @@
 # IBQUOTA 3 - CUPS BACKEND
 
- Print Accounting Software
-
-AJUDE NO DESENVOLVIMENTO: Reporte erros ou sugestões!
-
-    Versão 3.2: 20/fev/19
-    Versão 3.3: (Aguardando retorno dos usuarios) 
+OBS Inicial: Fazer a instalação utilizando o Ubuntu versão 16.04 LTS. 
 
 Instalação
 
 1 - Executar os processos de instalação dos pacotes.
 
-    $ sudo apt-get install apache2 build-essential cups pkpgcounter mysql-server php libdbd-mysql-perl libnet-ldap-perl php-ldap
+    sudo apt-get install apache2 build-essential cups mysql-server php libdbd-mysql-perl libnet-ldap-perl php-ldap python-minimal
 
-1.1 - """(APENAS se o pacote pkpgcounter não exister em sua distribuição, ex CentOS)""" Instalação manual do contador de páginas pkpgcounter:
 
-    $ cd /tmp
-    $ wget http://www.pykota.com/software/pkpgcounter/download/tarballs/pkpgcounter-3.50.tar.gz
-    $ tar -zxf pkpgcounter-3.50.tar.gz
-    $ cd pkpgcounter-3.50
-    $ python setup.py install
+1.1 - Instalação manual do contador de páginas pkpgcounter:
+
+    cd /home/nome_do_usuario
+    wget http://www.pykota.com/software/pkpgcounter/download/tarballs/pkpgcounter-3.50.tar.gz
+    tar -zxf pkpgcounter-3.50.tar.gz
+    cd pkpgcounter-3.50
+    nano setup.py -> REMOVA O TRY CATCH DE IMPORT DO PSYCO.
+    python setup.py install
 
 
 2 - Download IBQUOTA 3 (versão em Desenvolvimento)
 
-    $ wget https://github.com/valcir/ibquota/archive/master.zip
-    ou
-    $ git clone https://github.com/valcir/ibquota.git
+    wget https://github.com/valcir/ibquota/archive/master.zip
+    
+   
 
 3 - Configurando o cups.
 
-    $ sudo vi /etc/cups/cupsd.conf
+    sudo nano /etc/cups/cupsd.conf
 
 Localizar a linha "Listen localhost:631" e alterar para:
 
@@ -62,34 +59,37 @@ Dar permissão de acesso ao CUPS, altere as linhas conforme abaixo:
  
 Criar o banco de dados:
 
-    $ sudo mysql -u root -p
-    $ password: *****
-    $ mysql> CREATE DATABASE ibquota3;
-    $ mysql> exit
+     sudo mysql -u root -p
+     confirmar senha: *****
+     mysql> CREATE DATABASE ibquota3;
+     mysql> exit
 
 Criar a estrutura do Banco (tabelas) através do script ibquota3.sql.
     
-    $ cd ibquota3/sql
-    $ sudo mysql -u root -p ***** ibquota3 < ibquota3.sql
+     cd /home/nome_usuario/ibquota3/sql
+     sudo mysql -u root ibquota3 < ibquota3.sql -p
+     confirmar senha: *****
+     
 
 Criar um usuário no Banco:
 
-    $ sudo mysql -u root -p
+    sudo mysql -u root -p
+    confirmar senha: *****
     mysql> GRANT ALL ON ibquota3.* TO ibquota@localhost identified by 'ibquota';
     mysql> FLUSH PRIVILEGES;
     mysql> exit
  
 O script principal (ibquota3) deverá ser copiado para dentro do CUPS.
 
-    $ cd backend
-    $ sudo cp ibquota3 /usr/lib/cups/backend/
-    $ cd /usr/lib/cups/backend
-    $ sudo chmod 755 ibquota3
-    $ sudo chown root ibquota3
+     cd /home/nome_usuario/backend
+     sudo cp ibquota3 /usr/lib/cups/backend/
+     cd /usr/lib/cups/backend
+     sudo chmod 755 ibquota3
+     sudo chown root ibquota3
 
 Agora temos que editar o backend:
 
-    $ sudo vi /usr/lib/cups/ibquota3
+     sudo nano /usr/lib/cups/ibquota3
 
     my $DBhost="localhost";
     my $DBlogin="ibquota";
@@ -97,14 +97,15 @@ Agora temos que editar o backend:
     my $DBdatabase="ibquota3";
     my $DBport=3306;
  
-    $ cd ../gg
-    $ sudo mkdir /var/www/html/gg
-    $ sudo cp -r * /var/www/html/gg
+     cd home/nome_usuario/ibquota-master/gg
+     sudo mkdir /var/www/html/gg
+     sudo cp -r * /var/www/html/gg
+     *Lembrar de deletar o arquivo index.html do apache.*
 
 Neste momento iremos editar o arquivo com as configurações de acesso a banco.
 
-    $ cd /var/www/html/gg
-    $ sudo vi includes/db.php
+    cd /var/www/html/gg
+    sudo nano includes/db.php
 
     define("HOST", "localhost");     // Servidor com o qual voce quer se conectar.
     define("USER", "ibquota");       // Usuário para acessar o banco de dados. 
@@ -113,7 +114,7 @@ Neste momento iremos editar o arquivo com as configurações de acesso a banco.
 
 5 - Reiniciar o CUPS:
 
-    $ sudo /etc/init.d/cups restart
+    sudo /etc/init.d/cups restart
 
 6 - Instalando a impressora no servidor.
 
@@ -130,8 +131,9 @@ Em "Administration", selecione:
     "Allow users to cancel any job (not just their own)" 
 
 Em "Administration", clique em "Add Printer" Faça a instalação da impressora prestando atenção em "connection".
-
-    connection: ibquota3:socket://IP-DA-IMPRESSORA
+    OBS: No meu caso em particular, eu adicionei da seguinte forma:
+    Opção 'Other Network Printers:' -> Internet Printing Protocol (http)
+    Deletar qualquer texto do campo e utilizar: ibquota3:socket://0.0.0.0 onde 0.0.0.0 = ip da impressora.
 
 7 - Configuração via GG:
 
@@ -144,13 +146,15 @@ Em "Administration", clique em "Add Printer" Faça a instalação da impressora 
     
 8 - Teste a configuração do Backend:
 
-    $ perl /usr/lib/cups/backend/ibquota3 --check
+    perl /usr/lib/cups/backend/ibquota3 --check
     
     PATH_PYTHON = /usr/bin/python [OK]
     Python is executable [OK]
     PATH_PKPGCOUNTER = /usr/bin/pkpgcounter [OK]
     Base de Dados: LOCAL SQL [OK]
     ...
+Item 8 - OBS: Pode acontecer do setup.py jogar o pkpgcounter para a pasta '/usr/local/bin/', neste caso você pode usar um:
+    sudo cp /usr/local/bin/pkpgcounter /usr/bin/pkpgcounter
+    
 
 Obrigado pelo interesse no IBQUOTA!
-
