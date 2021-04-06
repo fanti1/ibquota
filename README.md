@@ -1,8 +1,6 @@
 # IBQUOTA 3 - CUPS BACKEND (Testado com Ubuntu 16.04.7 LTS)
 
-Instalação
-
-1 - Executar os processos de instalação dos pacotes.
+## 1 - Instalar os pacotes abaixo:
 
     sudo apt-get install apache2 build-essential cups mysql-server php libdbd-mysql-perl libnet-ldap-perl php-ldap python-minimal
 
@@ -11,7 +9,7 @@ Instalação
     apt update
 
     ```
-1.1 - Instalação manual do contador de páginas pkpgcounter:
+## 1.1 - Instalação manual do contador de páginas pkpgcounter:
 
     cd /home/nome_do_usuario
     wget http://www.pykota.com/software/pkpgcounter/download/tarballs/pkpgcounter-3.50.tar.gz
@@ -21,13 +19,13 @@ Instalação
     python setup.py install
 
 
-2 - Download IBQUOTA 3 (versão em Desenvolvimento)
+## 2 - Download do template do IBQUOTA 3
 
     wget https://github.com/valcir/ibquota/archive/master.zip
     
    
 
-3 - Configurando o cups.
+## 3 - Configuração do CUPS
 
     sudo nano /etc/cups/cupsd.conf
 
@@ -35,7 +33,7 @@ Localizar a linha "Listen localhost:631" e alterar para:
 
     Listen 631
 
-Dar permissão de acesso ao CUPS, altere as linhas conforme abaixo:
+Para dar permissão de acesso via rotas ao CUPS, altere as linhas conforme abaixo:
 
     #Restrict access to the server...
     <Location />
@@ -57,23 +55,23 @@ Dar permissão de acesso ao CUPS, altere as linhas conforme abaixo:
       Order allow,deny
     </Location>
 
-4 - Banco de Dados:
+## 4 Criação do banco mysql:
  
-Criar o banco de dados:
+Criar o DB:
 
      sudo mysql -u root -p
      confirmar senha: *****
      mysql> CREATE DATABASE ibquota3;
      mysql> exit
 
-Criar a estrutura do Banco (tabelas) através do script ibquota3.sql.
+Importar a estrutura de tabelas através do script 'ibquota3.sql'
     
      cd /home/nome_usuario/ibquota3/sql
      sudo mysql -u root ibquota3 < ibquota3.sql -p
      confirmar senha: *****
      
 
-Criar um usuário no Banco:
+Criar o usuário padrão do ibquota no banco:
 
     sudo mysql -u root -p
     confirmar senha: *****
@@ -81,7 +79,7 @@ Criar um usuário no Banco:
     mysql> FLUSH PRIVILEGES;
     mysql> exit
  
-O script principal (ibquota3) deverá ser copiado para dentro do CUPS.
+O script principal (ibquota3) deverá ser copiado para dentro da basta backend, do CUPS.
 
      cd /home/nome_usuario/backend
      sudo cp ibquota3 /usr/lib/cups/backend/
@@ -104,7 +102,7 @@ Agora temos que editar o backend:
      sudo cp -r * /var/www/html/gg
      *Lembrar de deletar o arquivo index.html do apache.*
 
-Neste momento iremos editar o arquivo com as configurações de acesso a banco.
+Neste momento iremos editar o arquivo com as configurações de acesso a banco
 
     cd /var/www/html/gg
     sudo nano includes/db.php
@@ -114,13 +112,13 @@ Neste momento iremos editar o arquivo com as configurações de acesso a banco.
     define("PASSWORD", "ibquota");   // Senha de acesso ao banco de dados. 
     define("DATABASE", "ibquota3");  // O nome do banco de dados.
 
-5 - Reiniciar o CUPS:
+## 5 - Reiniciar o CUPS
 
     sudo /etc/init.d/cups restart
 
-6 - Instalando a impressora no servidor.
+## 6 - Instalando a impressora no servidor
 
-Acesse o CUPS:
+Acesse o CUPS pela URL no padrão abaixo
 
 http://ip_do_servidor:631
 
@@ -139,25 +137,26 @@ Em "Administration", clique em "Add Printer"
     ```ibquota3:socket://0.0.0.0``` 
     onde 0.0.0.0 = ip da impressora.
 
-7 - Configuração via GG:
+## 7 - Configuração via site do IBQUOTA 3:
 
-    - Acesse o GG http://ip_do_servidor/gg 
+    - Acesse o site http://ip_do_servidor/gg 
     - Login com "admin" (A senha será resetada)
     - Configuração principal (Paths, Base de usuários [SQL ou LDAP/AD], DEBUG)
     - Criar Usuário e Grupo, se Base for SQL;
     - Criar Política de Impressão
     - Faça um teste de impressão... 
     
-8 - Teste a configuração do Backend:
+## 8 - Teste a configuração do Backend:
 
     perl /usr/lib/cups/backend/ibquota3 --check
     PATH_PYTHON = /usr/bin/python [OK]
     Python is executable [OK]
     PATH_PKPGCOUNTER = /usr/bin/pkpgcounter [OK]
     Base de Dados: LOCAL SQL [OK]
-    
-### Pode acontecer do setup.py jogar o pkpgcounter para a pasta '/usr/local/bin/', se for este o caso, copie para o apontamento correto:
-    sudo cp /usr/local/bin/pkpgcounter /usr/bin/pkpgcounter
+# Observações finais:
+1) A criação de usuários administradores no template web do ibquota3 precisa ser corrigida, tem alguma coisa de errado ao setar as permissões.
+2) Pode acontecer do 'setup.py' do pkpgcounter, jogar o arquivo 'pkpgcounter' para a pasta '/usr/local/bin/', se for este o caso, copie o arquivo para a pasta correta
+    ```sudo cp /usr/local/bin/pkpgcounter /usr/bin/pkpgcounter```
     
 
 Obrigado pelo interesse no IBQUOTA!
