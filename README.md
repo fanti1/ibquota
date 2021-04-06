@@ -4,11 +4,11 @@
 
     sudo apt-get install apache2 build-essential cups mysql-server php libdbd-mysql-perl libnet-ldap-perl php-ldap python-minimal
 
-    ``` 
+    
     apt upgrade
     apt update
 
-    ```
+   
 ## 1.1 - Instalação manual do contador de páginas pkpgcounter:
 
     cd /home/nome_do_usuario
