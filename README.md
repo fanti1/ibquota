@@ -154,7 +154,7 @@ Em "Administration", clique em "Add Printer"
 
 - Acesse o site http://ip_do_servidor/gg 
 - Login com "admin" (A senha será resetada)
-- Configuração principal (Paths, Base de usuários [SQL ou LDAP/AD], DEBUG) (Neste tutorial, eu testei SEM LDAP, ou seja, base local MYSQL.)
+- Configuração principal (Paths, Base de usuários [SQL ou LDAP/AD], DEBUG)
     
 ## 8 - Teste a configuração do Backend:
 
@@ -184,8 +184,9 @@ Faça o teste da impressão. Caso na aba "Relatórios>Impressões" vier com stat
 Se não, veja no log de erro dentro do IBQUOTA. 
 Relatórios>Impressões com erro
 # Observações finais:
-1) A criação de usuários administradores no template web do ibquota3 precisa ser corrigida, tem alguma coisa de errado ao setar as permissões.
+1) Não testei as configurações com LDAP/AD integrados no IBQUOTA. Fiz a importação do AD e inseri manualmente no mysql.
 2) Pode acontecer do 'setup.py' do pkpgcounter, jogar o arquivo 'pkpgcounter' para a pasta '/usr/local/bin/', se for este o caso, copie o arquivo para a pasta correta
+
 
         sudo cp /usr/local/bin/pkpgcounter /usr/bin/pkpgcounter
     
