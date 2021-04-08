@@ -14,7 +14,7 @@
     tar -zxf pkpgcounter-3.50.tar.gz
     cd pkpgcounter-3.50
     
-nano setup.py -> REMOVA O TRY CATCH DE IMPORT DO PSYCO.
+nano setup.py -> REMOVA OU COMENTE TRY CATCH DE IMPORT DO PACKAGE 'psyco'.
 
     python setup.py install
 
@@ -154,10 +154,7 @@ Em "Administration", clique em "Add Printer"
 
 - Acesse o site http://ip_do_servidor/gg 
 - Login com "admin" (A senha será resetada)
-- Configuração principal (Paths, Base de usuários [SQL ou LDAP/AD], DEBUG)
-- Criar Usuário e Grupo, se Base for SQL;
-- Criar Política de Impressão
-- Faça um teste de impressão... 
+- Configuração principal (Paths, Base de usuários [SQL ou LDAP/AD], DEBUG) (Neste tutorial, eu testei SEM LDAP, ou seja, base local MYSQL.)
     
 ## 8 - Teste a configuração do Backend:
 
